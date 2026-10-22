@@ -8,7 +8,15 @@ def GenImg(n):
     Img=[[r.randint(0,255) for i in range(n)] for j in range(n)]
     return Img
 Img1 = GenImg(5)
+print("Original Img\n")
 PImg(Img1)
+
+def PadImg(Img):
+    PaddedImg = [[0 for i in range(len(Img)+2)] for i in range(len(Img[0])+2)]
+    for i in range(len(Img)):
+        for j in range(len(Img[0])):
+            PaddedImg[i+1][j+1]=Img[i][j]
+    return PaddedImg
 
 def InvImg(Img):
     for i in range(0,len(Img)):
@@ -44,6 +52,7 @@ def RotImg(Img):
     return RotatedImg
 
 def BluImg(Img):
+    Img=PadImg(Img)
     BlurredImg = [[0 for i in range(len(Img))] for i in range(len(Img[0]))]
     for i in range(1,len(Img)-1):
         for j in range(1,len(Img[0])-1):
@@ -52,10 +61,3 @@ def BluImg(Img):
                     BlurredImg[i][j]+=Img[i+k][j+l]
             BlurredImg[i][j]= round(BlurredImg[i][j]/9)
     return BlurredImg
-
-def PadImg(Img):
-    PaddedImg = [[0 for i in range(len(Img)+2)] for i in range(len(Img[0])+2)]
-    for i in range(len(Img)):
-        for j in range(len(Img[0])):
-            PaddedImg[i+1][j+1]=Img[i][j]
-    return PaddedImg
