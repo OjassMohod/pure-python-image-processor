@@ -5,49 +5,59 @@ def PImg(Img):
     for row in Img:
         print(row)
 
-#Generating a random image
-def GenImg(n):
-    return [[r.randint(0, 255) for i in range(n)] for j in range(n)]
+#Generating a random greyscale image
+def GreImg(m,n):
+    return [[[r.randint(0, 255)] for i in range(n)] for j in range(m)]
 
-Img1=GenImg(5)
+#Generating a random RGB image
+def RGBImg(m,n):
+    return [[[r.randint(0, 255) for i in range(0,3)] for j in range(n)] for k in range(m)]
+
+Img1=GreImg(5,5)
+#Img1=RGBImg(5,5)
 print("Randomly generated image")
 PImg(Img1)
 
 #Padding an image
 def PadImg(Img):
-    PaddedImg = [[0 for i in range(len(Img) + 2)] for j in range(len(Img[0]) + 2)]
+    PaddedImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img[0]) + 2)] for k in range(len(Img) + 2)]
     for i in range(len(Img)):
         for j in range(len(Img[0])):
-            PaddedImg[i + 1][j + 1] = Img[i][j]
+            for k in range(len(Img[0][0])):
+                PaddedImg[i + 1][j + 1][k] = Img[i][j][k]
     return PaddedImg
 
 #Inverting values of an image
 def InvImg(Img):
-    InvertedImg = [[0 for i in range(len(Img))] for j in range(len(Img[0]))]
+    InvertedImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img[0]))] for k in range(len(Img))]
     for i in range(len(Img)):
         for j in range(len(Img[i])):
-            InvertedImg[i][j] = 255 - Img[i][j]
+            for k in range(len(Img[i][j])):
+                InvertedImg[i][j][k] = 255 - Img[i][j][k]
     return InvertedImg
+PImg(InvImg(Img1))
 
 #Increasing brightness of an image by a given amount
 def BriImg(Img, val):
-    BrightenedImg = [[0 for i in range(len(Img))] for j in range(len(Img[0]))]
+    BrightenedImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img[0]))] for k in range(len(Img))]
     for i in range(len(Img)):
         for j in range(len(Img[i])):
-            BrightenedImg[i][j] = Img[i][j] + val
-            if BrightenedImg[i][j] > 255:
-                BrightenedImg[i][j] = 255
+            for k in range(len(Img[i][j])):
+                BrightenedImg[i][j][k] = Img[i][j][k] + val
+                if BrightenedImg[i][j][k] > 255:
+                    BrightenedImg[i][j][k] = 255
     return BrightenedImg
 
 #Setting a threshold for an image and whitening/blackening image based on it
 def ThrImg(Img, val):
-    ThresholdedImg = [[0 for i in range(len(Img))] for j in range(len(Img[0]))]
+    ThresholdedImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img[0]))] for k in range(len(Img))]
     for i in range(len(Img)):
         for j in range(len(Img[i])):
-            if Img[i][j] >= val:
-                ThresholdedImg[i][j] = 255
-            else:
-                ThresholdedImg[i][j] = 0
+            for k in range(len(Img[i][j])):
+                if Img[i][j][k] >= val:
+                    ThresholdedImg[i][j][k] = 255
+                else:
+                    ThresholdedImg[i][j][k] = 0
     return ThresholdedImg
 
 #Flipping an image horizontally
@@ -56,22 +66,34 @@ def FliImg(Img):
 
 #Rotating an image clockwise by 90 degrees
 def RotImg(Img):
-    RotatedImg = [[None for i in range(len(Img))] for j in range(len(Img[0]))]
+    RotatedImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img))] for k in range(len(Img[0]))]
     for i in range(len(Img)):
-        for j in range(len(Img[0])):
-            RotatedImg[j][len(Img) - 1 - i] = Img[i][j]
+        for j in range(len(Img[i])):
+            for k in range(len(Img[i][j])):
+                RotatedImg[j][len(Img) - 1 - i][k] = Img[i][j][k]
     return RotatedImg
+
+#Returns a cropped image
+def CropImg(Img,left,up,right,down):
+    CroppedImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img[0])-left-right)] for k in range(len(Img)-up-down)]
+    for i in range(len(Img)-up-down):
+        for j in range(len(Img[i])-left-right):
+            for k in range(len(Img[i][j])): 
+                CroppedImg[i][j][k]=Img[i+up][j+left][k]
+    return CroppedImg
 
 #Blurring an image using mean average of surrounding 3x3 pixels
 def BluImg(Img):
     Img = PadImg(Img)
-    BlurredImg = [[0 for i in range(len(Img[0]))] for j in range(len(Img))]
+    BlurredImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img[0])-2)] for k in range(len(Img)-2)]
     for i in range(1, len(Img) - 1):
         for j in range(1, len(Img[0]) - 1):
             for k in range(-1, 2):
                 for l in range(-1, 2):
-                    BlurredImg[i][j] += Img[i + k][j + l]
-            BlurredImg[i][j] = round(BlurredImg[i][j] / 9)
+                    for m in range(len(Img[i][j])):
+                        BlurredImg[i-1][j-1][m] += Img[i + k][j + l][m]
+            for m in range(len(Img[i][j])):
+                BlurredImg[i-1][j-1][m] = round(BlurredImg[i-1][j-1][m] / 9)
     return BlurredImg
 
 """print('\nPadded Image\n')
@@ -86,5 +108,7 @@ print("\nFlipped Image\n")
 PImg(FliImg(Img1))
 print("\nRotated Image\n")
 PImg(RotImg(Img1))
+print("\nCropped Image\n")
+PImg(CropImg(Img1,0,1,1,1))
 print("\nBlurred Image\n")
 PImg(BluImg(Img1))"""
