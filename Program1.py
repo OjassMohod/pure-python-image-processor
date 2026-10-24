@@ -13,11 +13,6 @@ def GreImg(m,n):
 def RGBImg(m,n):
     return [[[r.randint(0, 255) for i in range(0,3)] for j in range(n)] for k in range(m)]
 
-Img1=GreImg(5,5)
-#Img1=RGBImg(5,5)
-print("Randomly generated image")
-PImg(Img1)
-
 #Padding an image
 def PadImg(Img):
     PaddedImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img[0]) + 2)] for k in range(len(Img) + 2)]
@@ -35,7 +30,6 @@ def InvImg(Img):
             for k in range(len(Img[i][j])):
                 InvertedImg[i][j][k] = 255 - Img[i][j][k]
     return InvertedImg
-PImg(InvImg(Img1))
 
 #Increasing brightness of an image by a given amount
 def BriImg(Img, val):
@@ -45,7 +39,7 @@ def BriImg(Img, val):
             for k in range(len(Img[i][j])):
                 BrightenedImg[i][j][k] = Img[i][j][k] + val
                 if BrightenedImg[i][j][k] > 255:
-                    BrightenedImg[i][j][k] = 255
+                    BrightenedImg[i][j][k] = max(0, min(255, Img[i][j][k] + val))
     return BrightenedImg
 
 #Setting a threshold for an image and whitening/blackening image based on it
@@ -96,7 +90,26 @@ def BluImg(Img):
                 BlurredImg[i-1][j-1][m] = round(BlurredImg[i-1][j-1][m] / 9)
     return BlurredImg
 
-"""print('\nPadded Image\n')
+def EdgImg(Img):
+    Img = PadImg(Img)
+    EdgeSharpenedImg = [[[0 for i in range(len(Img[0][0]))] for j in range(len(Img[0])-2)] for k in range(len(Img)-2)]
+    for i in range(1, len(Img) - 1):
+        for j in range(1, len(Img[0]) - 1):
+            for k in range(-1, 2):
+                for l in range(-1, 2):
+                    for m in range(len(Img[i][j])):
+                        if k == 0 and l == 0:
+                            EdgeSharpenedImg[i-1][j-1][m] += 8*Img[i + k][j + l][m]
+                        else:
+                            EdgeSharpenedImg[i-1][j-1][m] -= Img[i + k][j + l][m]
+    EdgeSharpenedImg = [[[min(255,abs(k)) for k in j] for j in i] for i in EdgeSharpenedImg]
+    return EdgeSharpenedImg
+
+"""Img1=GreImg(5,5)
+#Img1=RGBImg(5,5)
+print("Randomly generated image")
+PImg(Img1)
+print('\nPadded Image\n')
 PImg(PadImg(Img1))
 print("\nInverted Image\n")
 PImg(InvImg(Img1))
@@ -109,6 +122,8 @@ PImg(FliImg(Img1))
 print("\nRotated Image\n")
 PImg(RotImg(Img1))
 print("\nCropped Image\n")
-PImg(CropImg(Img1,0,1,1,1))
+PImg(CropImg(Img1,1,1,1,1))
 print("\nBlurred Image\n")
-PImg(BluImg(Img1))"""
+PImg(BluImg(Img1))
+print("\nEdge Sharpened Image\n")
+PImg(EdgImg(Img1))"""
