@@ -105,6 +105,40 @@ def EdgImg(Img):
     EdgeSharpenedImg = [[[min(255,abs(k)) for k in j] for j in i] for i in EdgeSharpenedImg]
     return EdgeSharpenedImg
 
+def LoadPPMP3(filename):
+    with open(filename, "r") as file:
+        data = []
+
+        for line in file:
+            line = line.split("#")[0]
+            data.extend(line.split())
+
+    #in PPM P3 format files, 1st element is P3, 2nd is width, 3rd is height and 4th is max value
+    LoadedImg = [[[0 for i in range(0,3)] for j in range(int(data[1]))] for k in range(int(data[2]))]
+    n=4
+    
+    for i in range(int(data[2])):
+        for j in range(int(data[1])):
+            for k in range(0,3):
+                LoadedImg[i][j][k] = int(data[n])
+                n+=1
+
+    return LoadedImg
+    
+def SavePPMP3(filename, Img):
+
+    with open(filename, "w") as file:
+        file.write("P3\n")
+        file.write(f"{len(Img[0])} {len(Img)}\n")
+        file.write("255\n")
+
+        for i in range(len(Img)):
+            for j in range(len(Img[0])):
+                for k in range(3):
+                    file.write(f"{Img[i][j][k]} ")
+
+            file.write("\n")
+
 """Img1=GreImg(5,5)
 #Img1=RGBImg(5,5)
 print("Randomly generated image")
@@ -126,4 +160,5 @@ PImg(CropImg(Img1,1,1,1,1))
 print("\nBlurred Image\n")
 PImg(BluImg(Img1))
 print("\nEdge Sharpened Image\n")
-PImg(EdgImg(Img1))"""
+PImg(EdgImg(Img1))
+SavePPMP3('NewPPMP3Img.ascii.ppm',RotImg(LoadPPMP3('snail.ascii.ppm')))"""
