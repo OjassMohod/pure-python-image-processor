@@ -9,6 +9,10 @@ def PImg(Img):
 def GenImg(n):
     return [[r.randint(0, 255) for i in range(n)] for j in range(n)]
 
+Img1=GenImg(5)
+print("Randomly generated image")
+PImg(Img1)
+
 #Padding an image
 def PadImg(Img):
     PaddedImg = [[0 for i in range(len(Img) + 2)] for j in range(len(Img[0]) + 2)]
@@ -19,29 +23,32 @@ def PadImg(Img):
 
 #Inverting values of an image
 def InvImg(Img):
+    InvertedImg = [[0 for i in range(len(Img))] for j in range(len(Img[0]))]
     for i in range(len(Img)):
         for j in range(len(Img[i])):
-            Img[i][j] = 255 - Img[i][j]
-    return Img
+            InvertedImg[i][j] = 255 - Img[i][j]
+    return InvertedImg
 
 #Increasing brightness of an image by a given amount
 def BriImg(Img, val):
+    BrightenedImg = [[0 for i in range(len(Img))] for j in range(len(Img[0]))]
     for i in range(len(Img)):
         for j in range(len(Img[i])):
-            Img[i][j] += val
-            if Img[i][j] > 255:
-                Img[i][j] = 255
-    return Img
+            BrightenedImg[i][j] = Img[i][j] + val
+            if BrightenedImg[i][j] > 255:
+                BrightenedImg[i][j] = 255
+    return BrightenedImg
 
 #Setting a threshold for an image and whitening/blackening image based on it
 def ThrImg(Img, val):
+    ThresholdedImg = [[0 for i in range(len(Img))] for j in range(len(Img[0]))]
     for i in range(len(Img)):
         for j in range(len(Img[i])):
             if Img[i][j] >= val:
-                Img[i][j] = 255
+                ThresholdedImg[i][j] = 255
             else:
-                Img[i][j] = 0
-    return Img
+                ThresholdedImg[i][j] = 0
+    return ThresholdedImg
 
 #Flipping an image horizontally
 def FliImg(Img):
@@ -66,3 +73,18 @@ def BluImg(Img):
                     BlurredImg[i][j] += Img[i + k][j + l]
             BlurredImg[i][j] = round(BlurredImg[i][j] / 9)
     return BlurredImg
+
+"""print('\nPadded Image\n')
+PImg(PadImg(Img1))
+print("\nInverted Image\n")
+PImg(InvImg(Img1))
+print("\nBrighened Image\n")
+PImg(BriImg(Img1,100))
+print("\nThresholded image\n")
+PImg(ThrImg(Img1,100))
+print("\nFlipped Image\n")
+PImg(FliImg(Img1))
+print("\nRotated Image\n")
+PImg(RotImg(Img1))
+print("\nBlurred Image\n")
+PImg(BluImg(Img1))"""
